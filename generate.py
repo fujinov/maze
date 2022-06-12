@@ -24,7 +24,7 @@ class GenerateMaze():
         if y + 2 < self.height and self.maze[y+2][x] == '#':
             directions.append('D')
         return directions
-    
+
     def dig_wall(self):
         y, x = self.random_yx()
         stack = [(y, x)]
@@ -58,7 +58,13 @@ class GenerateMaze():
 
     def print_maze(self):
         for lines in self.maze:
-            print(''.join(lines))
+            for line in lines:
+                if line == '#':
+                    print('＃', end='')
+                elif line == ' ':
+                    print('　', end='')
+            print()
+
 
 if __name__ == '__main__':        
     maze = GenerateMaze(25, 25)
