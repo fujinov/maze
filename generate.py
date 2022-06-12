@@ -7,13 +7,9 @@ class GenerateMaze():
         self.width = width
         self.height = height
         self.maze = [list('#'*width) for _ in range(height)]
+        self._dig_walls()
 
-    def random_yx(self):
-        y = random.choice([i for i in range(1, self.height, 2)])
-        x = random.choice([i for i in range(1, self.width, 2)])
-        return y, x
-
-    def search_directions(self, y , x):
+    def _search_directions(self, y , x):
         directions = []
         if x - 2 > 0 and self.maze[y][x-2] == '#':
             directions.append('L')
@@ -25,12 +21,13 @@ class GenerateMaze():
             directions.append('D')
         return directions
 
-    def dig_wall(self):
-        y, x = self.random_yx()
+    def _dig_walls(self):
+        y = random.choice([i for i in range(1, self.height, 2)])
+        x = random.choice([i for i in range(1, self.width, 2)])
         stack = [(y, x)]
         self.maze[y][x] = ' '
         while stack:
-            directions = self.search_directions(y, x)
+            directions = self._search_directions(y, x)
             if directions == []:
                 stack.pop()
                 if stack:
@@ -63,10 +60,18 @@ class GenerateMaze():
                     print('＃', end='')
                 elif line == ' ':
                     print('　', end='')
+                elif line == 'S':
+                    print('Ｓ', end='')
+                elif line == 'G':
+                    print('Ｇ', end='')
             print()
 
+    def preset_start_goal(self):
+        self.maze[self.height-2][0] = 'S'
+        self.maze[1][self.width-1] = 'G'
 
-if __name__ == '__main__':        
+
+if __name__ == '__main__':
     maze = GenerateMaze(25, 25)
-    maze.dig_wall()
+    maze.preset_start_goal()
     maze.print_maze()
