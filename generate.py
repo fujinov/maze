@@ -74,42 +74,38 @@ class GenerateMaze():
                     print('Ｇ', end='')
             print()
 
-    # startとgoalはそれぞれタプルで(y,x)の座標
-    def preset_start_goal(self, start=None, goal=None):
-        if start is None:
-            self.start = (self.height-2, 0)
-            self.maze[self.height-2][0] = 'S'
-        else:
-            self.start = start
-            self.maze[start[0]][start[1]] = 'S'
-
-        if goal is None:
-            self.goal = (1, self.width-1)
-            self.maze[1][self.width-1] = 'G'
-        else:
-            self.goal = goal
-            self.maze[goal[0]][goal[1]] = 'G'
+    # SとGをself.mazeに書き込み
+    def preset_start_goal(self):
+        self.start = (self.height-2, 0)
+        self.maze[self.height-2][0] = 'S'
+        self.goal = (1, self.width-1)
+        self.maze[1][self.width-1] = 'G'
 
     def regenerate(self):
-        self.maze = [list('#'*width) for _ in range(height)]
+        self.maze = [list('#'*self.width) for _ in range(self.height)]
         self._dig_walls()
 
 
 if __name__ == '__main__':
 
-    def input_check(user):
+    def check_value(user):
         if user < 5 or user % 2 == 0:
             return False
         else:
             return True
 
     while True:
-        width = int(input('Width = '))
-        height = int(input('Height = '))
-        if all([input_check(width), input_check(height)]):
+        print('迷路を出力します')
+        print('幅と高さが5以上の奇数を入力')
+        try:
+            width = int(input('Width = '))
+            height = int(input('Height = '))
+        except ValueError:
+            print('有効な数字を入力して下さい\n')
+            continue
+
+        if all([check_value(width), check_value(height)]):
             break
-        else:
-            print('幅と高さは5以上の奇数にしてください。')
 
     maze = GenerateMaze(width, height)
     maze.preset_start_goal()
