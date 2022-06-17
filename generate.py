@@ -23,16 +23,15 @@ class GenerateMaze():
         return directions
 
     def _dig_walls(self):
-        y = random.choice([i for i in range(1, self.height, 2)])
-        x = random.choice([i for i in range(1, self.width, 2)])
-        stack = [(y, x)]
-        self.maze[y][x] = ' '
+        start_y = random.choice([i for i in range(1, self.height, 2)])
+        start_x = random.choice([i for i in range(1, self.width, 2)])
+        self.maze[start_y][start_x] = ' '
+        stack = [(start_y, start_x)]
         while stack:
+            y, x = stack[-1]
             directions = self._search_directions(y, x)
             if directions == []:
                 stack.pop()
-                if stack:
-                    y, x = stack[-1]
                 continue
 
             choiced = random.choice(directions)
