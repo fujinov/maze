@@ -6,19 +6,17 @@ from generate import GenerateMaze
 
 class SearchMaze(GenerateMaze):
 
-    def __init__(self, width, height, start=None, goal=None):
+    def __init__(self, width, height):
         super().__init__(width, height)
+        super().preset_start_goal()
         self.spare = deepcopy(self.maze)
-        if start is None or goal is None:
-            super().preset_start_goal()
-        else:
-            super().preset_start_goal(start, goal)
         self.START = (self.start[0], self.start[1]+1)
         self.GOAL = (self.goal[0], self.goal[1]-1)
     
     def reset_root(self):
         self.maze = deepcopy(self.spare)
 
+    # 深さ優先探索を行う
     def dfsearch(self):
         steps = 1
         stack = [self.START]
@@ -34,6 +32,7 @@ class SearchMaze(GenerateMaze):
                     stack.append((yi, xi))
             steps += 1
 
+    # 幅優先探索を行う
     def bfsearch(self):
         distance = [[-1]*self.width for _ in range(self.height)]
         distance[self.START[0]][self.START[1]] = 1
@@ -50,6 +49,7 @@ class SearchMaze(GenerateMaze):
                     que.append((yi, xi))
                     distance[yi][xi] = distance[y][x] + 1
 
+    # 最短経路の算出
     def shortest_distance(self):
         self.bfsearch()
         y, x = self.GOAL
@@ -71,19 +71,24 @@ class SearchMaze(GenerateMaze):
 
 if __name__ == '__main__':
 
-    def input_check(user):
+    def check_value(user):
         if user < 5 or user % 2 == 0:
             return False
         else:
             return True
 
     while True:
-        width = int(input('Width = '))
-        height = int(input('Height = '))
-        if all([input_check(width), input_check(height)]):
+        print('迷路を出力します')
+        print('幅と高さが5以上の奇数を入力')
+        try:
+            width = int(input('Width = '))
+            height = int(input('Height = '))
+        except ValueError:
+            print('有効な数字を入力して下さい\n')
+            continue
+
+        if all([check_value(width), check_value(height)]):
             break
-        else:
-            print('幅と高さは5以上の奇数にしてください。')
 
     maze = SearchMaze(width, height)
     maze.print_maze()
@@ -99,5 +104,8 @@ if __name__ == '__main__':
             maze.shortest_distance()
         elif user == '4':
             break
+        else:
+            print('有効な数字を入力して下さい\n')
+            continue
         maze.print_maze()
         maze.reset_root()
